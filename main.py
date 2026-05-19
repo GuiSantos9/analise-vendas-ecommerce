@@ -79,19 +79,31 @@ def dados_ficticios(numero_de_registros = 600):
 df_vendas = dados_ficticios(500)
 
 # shape
-df_vendas.shape
+print(df_vendas.shape)
 
 # exibe as 5 primeiras linhas do DataFrame
-df_vendas.head()
+print(df_vendas.head())
 
 # exibe as 5 ultimas linhas do DataFrame
-df_vendas.tail()
+print(df_vendas.tail())
 
 # exibe informações gerais sobre o DataFrame
 df_vendas.info()
 
 # resumo estatístico
-df_vendas.describe()
+print(df_vendas.describe())
 
 # tipos de dados
-df_vendas.dtypes
+print(df_vendas.dtypes)
+
+#limpeza pré-processamento e engenharia de atributos
+df_vendas['Data_Pedido'] = pd.to_datetime(df_vendas['Data_Pedido'])
+
+df_vendas['Faturamento'] = df_vendas['Preco_Unitario'] * df_vendas['Quantidade']
+
+df_vendas['Status_Entrega'] = df_vendas['Estado'].apply(lambda estado: 'Rápida' if estado in
+                                                        ['SP', 'RG', 'MG'] else 'Normal' )
+
+df_vendas.info()
+
+print(df_vendas.head())
