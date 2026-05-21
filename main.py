@@ -107,3 +107,67 @@ df_vendas['Status_Entrega'] = df_vendas['Estado'].apply(lambda estado: 'Rápida'
 df_vendas.info()
 
 print(df_vendas.head())
+
+# Análise
+# aqui eu agrupo os produtos por nome e ordeno para mostrar os 10 produtos mais vendidos
+top_10_produtos = df_vendas.groupby('Nome_Produto')['Quantidade'].sum().sort_values(ascending=False).head(10)
+
+print(top_10_produtos)
+
+# gráfico
+
+# definir estilo de gráfico usando o sns
+sns.set_style("whitegrid")
+
+# criar a figura e os eixos
+plt.figure(figsize= (12, 7))
+# criar gráficos de barras horizontais pelo plot plt
+top_10_produtos.sort_values(ascending=True).plot(kind='barh', color="skyblue")
+
+# criar os títulos e labels
+plt.title("Top 10 Produtos mais vendidos", fontsize = 16)
+plt.xlabel("Quantidade Vendida", fontsize = 12)
+plt.ylabel("Produtos", fontsize = 12)
+
+# exibir o gráfico
+plt.tight_layout()
+plt.show()
+
+
+# Faturamento Mensal
+# criar uma coluna 'Mes' para facilitar o grupamento mensal
+df_vendas['Mes'] = df_vendas['Data_Pedido'].dt.to_period('M')
+
+# agrupo os mêses e somo(sum) seus faturamentos
+faturamento_mensal = df_vendas.groupby('Mes')['Faturamento'].sum()
+
+# converto o index para string para facilitar a plotagem
+faturamento_mensal.index = faturamento_mensal.index.strftime('%Y-%m')
+
+# Formato para duas casas decimais
+# pega o que está em parêntes e vai aplicar no data frame
+faturamento_mensal.map('R$ {:,.2f}'.format)
+
+# criar a figura e os eixos
+plt.figure(figsize= (12, 6))
+
+#plota os dados de faturamento mensal em formato de linha
+faturamento_mensal.plot(kind = 'line', marker = 'o', color = 'green')
+
+#título e labels
+plt.title('Evolução do Faturamento Mensal', fontsize = 16)
+plt.xlabel('Mês', fontsize = 12)
+plt.ylabel('Faturamento {R$}', fontsize = 12)
+
+# rotaciona os valores do eixo x em 45 graus para melhor visualização
+# xticks são os labels de x porém colocamos uma inclinação
+plt.xticks(rotation = 45)
+
+# adiciona uma grade com estilo tracejado e linhas finas
+plt.grid(True, which = 'both', linestyle = '--', linewidth = 0.5)
+
+# ajusta os elementos automaticamente para não ter sobreposição
+plt.tight_layout()
+
+#exibe o gráfico
+plt.show()
