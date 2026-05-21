@@ -3,6 +3,7 @@ from random import randint
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
 import seaborn as sns
 import random
 from datetime import datetime,timedelta
@@ -171,3 +172,60 @@ plt.tight_layout()
 
 #exibe o gráfico
 plt.show()
+
+# Análise de vendas por Estado
+vendas_estado = df_vendas.groupby('Estado')['Faturamento'].sum().sort_values(ascending=False)
+
+vendas_estado.map('R$ {:,.2f}'.format)
+
+plt.figure(figsize= (12, 7))
+
+vendas_estado.plot(kind = "bar", color = sns.color_palette("husl", 7))
+
+plt.title('Análise de vendas por Estado', fontsize = 16)
+plt.xlabel('Estado', fontsize = 12)
+plt.ylabel('Faturamento {R$}', fontsize = 12)
+
+plt.xticks(rotation = 0)
+
+plt.tight_layout()
+
+plt.show()
+
+# Análise de Faturamento Total por Categoria
+
+faturamento_categoria = df_vendas.groupby('Categoria')['Faturamento'].sum().sort_values(ascending=False)
+
+faturamento_categoria.map('R$ {:,.2f}'.format)
+
+# ordena os dados do gráfico para facilitar a leitura
+faturamento_ordenado = faturamento_categoria.sort_values(ascending=False)
+
+# cria a figura e os eixos (ax) com plt.subplots()
+# isso nos dá mais controle sobre os elementos do gráfico
+fig, ax = plt.subplots(figsize= (12, 7))
+
+# cria uma função para formatar números
+# ela recebe um valor 'y' e o transforma em uma string no formato 'R$ XX K'
+def formatador_milhares(y, pos):
+    return f'R$ {y/1000:,.0f}K'
+
+# cria um objeto formatador
+formatter = FuncFormatter(formatador_milhares)
+
+# aplica o formatador ao eixo y
+ax.yaxis.set_major_formatter(formatter)
+
+# faturamento ordenado
+faturamento_categoria.plot(kind = 'bar', ax = ax, color = sns.color_palette("viridis", len(faturamento_ordenado)))
+
+ax.set_title("Faturamento por Categoria", fontsize = 16)
+ax.set_xlabel("Categoria", fontsize = 12)
+ax.set_ylabel("Faturamento", fontsize = 12)
+
+plt.xticks(rotation = 45, ha = "right")
+
+plt.tight_layout()
+
+plt.show()
+
