@@ -94,6 +94,3 @@ Mesmo sendo um projeto introdutório, foi possível perceber a importância da a
 
 ---
 
-## 👤 Autor
-
-Feito por **[Seu Nome]** · [LinkedIn](https://linkedin.com/in/seu-perfil) · [GitHub](https://github.com/seu-usuario)
